@@ -12,6 +12,7 @@ const cellHeight = canvas.height / CELL_COUNT;
 
 let shouldConfine = false;
 let cells = [];
+let requestAnimationFrameId;
 
 document.getElementById('confined').checked = localStorage.getItem('battleOfElements.confined') === 'true';
 
@@ -20,7 +21,13 @@ function toggleConfined() {
   localStorage.setItem('battleOfElements.confined', shouldConfine);
 }
 
-function restart() {
+function updateButtons() {
+  document.getElementById('start').style.display = requestAnimationFrameId === undefined ? '' : 'none';
+  document.getElementById('stop').style.display = requestAnimationFrameId === undefined ? 'none' : '';
+  document.getElementById('restart').style.display = '';
+}
+
+function clear() {
   cells = [];
 
   for (let i = 0; i < CELL_COUNT; i++) {
@@ -37,17 +44,38 @@ function restart() {
   randomCell().water = MAX_LIFE;
 }
 
-restart();
+clear();
+redraw();
+
+function restart() {
+  clear();
+  stop();
+  start();
+}
+
+function start() {
+  scheduleStep();
+  updateButtons();
+  document.getElementById('start').textContent = 'Resume';
+}
+
+function stop() {
+  cancelAnimationFrame(requestAnimationFrameId);
+  requestAnimationFrameId = undefined;
+  updateButtons();
+}
 
 function onStep() {
   attack('fire');
   attack('wind');
   attack('water');
   redraw();
-  requestAnimationFrame(onStep);
+  scheduleStep();
 }
 
-requestAnimationFrame(onStep);
+function scheduleStep() {
+  requestAnimationFrameId = requestAnimationFrame(onStep);
+}
 
 function attack(element) {
   const elementIndex = ELEMENT_HIERARCHY.indexOf(element);

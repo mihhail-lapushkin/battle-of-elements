@@ -1,4 +1,5 @@
 # Battle of Elements
-Just open `index.html` in a browser to run.
 
-**Beware:** High CPU usage!
+Running:
+1. Open `index.html` in a browser
+2. Press `Start` to run

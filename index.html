@@ -4,6 +4,10 @@
   <label style="display: table; margin: 0 auto; margin-top: 10px;">
     <input type="checkbox" id="confined" onclick="toggleConfined()" style="margin-right: 10px;">Confined
   </label>
-  <button style="display: table; margin: 0 auto; margin-top: 10px;" onclick="restart()">Restart</button>
+  <div style="display: table; margin: 0 auto; margin-top: 10px;">
+    <button id="start" onclick="start()" style="width: 60px;">Start</button>
+    <button id="stop" onclick="stop()" style="width: 60px; display: none;">Stop</button>
+    <button id="restart" onclick="restart()" style="width: 60px; margin-left: 10px; display: none;">Restart</button>
+  </div>
 </div>
 <script src="code.js"></script>
