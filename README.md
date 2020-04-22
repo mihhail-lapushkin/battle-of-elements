@@ -1,6 +1,6 @@
 # Battle of Elements
 
-* Fire easts wind.
+* Fire eats wind.
 * Wind dries up water.
 * Water extinguishes fire.
 * The ever lasting battle.
