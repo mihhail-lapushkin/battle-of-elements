@@ -12,6 +12,7 @@ const cellHeight = canvas.height / CELL_COUNT;
 
 let shouldConfine = false;
 let cells = [];
+let intervalId;
 let requestAnimationFrameId;
 
 document.getElementById('confined').checked = localStorage.getItem('battleOfElements.confined') === 'true';
@@ -22,8 +23,8 @@ function toggleConfined() {
 }
 
 function updateButtons() {
-  document.getElementById('start').style.display = requestAnimationFrameId === undefined ? '' : 'none';
-  document.getElementById('stop').style.display = requestAnimationFrameId === undefined ? 'none' : '';
+  document.getElementById('start').style.display = intervalId === undefined ? '' : 'none';
+  document.getElementById('stop').style.display = intervalId === undefined ? 'none' : '';
   document.getElementById('restart').style.display = '';
 }
 
@@ -45,7 +46,7 @@ function clear() {
 }
 
 clear();
-redraw();
+draw();
 
 function restart() {
   clear();
@@ -54,14 +55,16 @@ function restart() {
 }
 
 function start() {
-  scheduleStep();
+  intervalId = setInterval(onStep, 1000 / 30);
+  drawingLoop();
   updateButtons();
   document.getElementById('start').textContent = 'Resume';
 }
 
 function stop() {
   cancelAnimationFrame(requestAnimationFrameId);
-  requestAnimationFrameId = undefined;
+  clearInterval(intervalId);
+  intervalId = undefined;
   updateButtons();
 }
 
@@ -69,12 +72,6 @@ function onStep() {
   attack('fire');
   attack('wind');
   attack('water');
-  redraw();
-  scheduleStep();
-}
-
-function scheduleStep() {
-  requestAnimationFrameId = requestAnimationFrame(onStep);
 }
 
 function attack(element) {
@@ -169,7 +166,7 @@ function battle(i, j, attacker, target, weakElement, lifeLeft) {
   return lifeLeft;
 }
 
-function redraw() {
+function draw() {
   for (let i = 0; i < CELL_COUNT; i++) {
     for (let j = 0; j < CELL_COUNT; j++) {
       const cell = cells[i][j];
@@ -179,6 +176,11 @@ function redraw() {
       canvasContext.fill();
     }
   }
+}
+
+function drawingLoop() {
+  draw();
+  requestAnimationFrameId = requestAnimationFrame(drawingLoop);
 }
 
 function tryConfine(index) {
